@@ -1,4 +1,4 @@
-#include "game.h"
+#include "Game.h"
 
 Game::Game() {
     isRunning = false;
@@ -14,7 +14,7 @@ void Game::Initialize(int width, int height) {
         return;
     }
     window = SDL_CreateWindow(
-        "Game Engine 1.0v",
+        "ECS Engine 1.0v",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         width,
@@ -42,6 +42,7 @@ void Game::InputHandler() {
         }
     }
 }
+
 
 void Game::Update() {
 

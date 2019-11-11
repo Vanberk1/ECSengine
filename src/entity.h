@@ -1,12 +1,8 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
 #include <string>
 
 class Entity {
 public:
-    unsigned int id;
-    std::string debugName;    
+    unsigned int id;   
 };
-
-#endif
