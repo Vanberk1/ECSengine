@@ -4,10 +4,10 @@
 
 class Component {
 private:
-    Entity entity;
+    Entity* entity;
     size_t poolIndex;
 
 public:
-    Component(Entity entity) : entity(entity) {}
+    Component(Entity* entity) : entity(entity) {}
     virtual void Init(void* data);
 };

@@ -1,7 +1,11 @@
 #pragma once
 
-class System {
-public:
-    virtual bool Init() = 0;
-    virtual void Update(float deltaTime) = 0;
+#include "BaseSystem.h"
+#include <vector>
+#include <tuple>
+
+template<class... Comps>
+class System : public BaseSystem {
+protected:
+    std::vector<std::tuple<Comps...>> components;
 };

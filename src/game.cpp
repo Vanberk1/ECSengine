@@ -43,7 +43,6 @@ void Game::InputHandler() {
     }
 }
 
-
 void Game::Update() {
 
 }
