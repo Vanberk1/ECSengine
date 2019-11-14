@@ -8,4 +8,7 @@ template<class... Comps>
 class System : public BaseSystem {
 protected:
     std::vector<std::tuple<Comps...>> components;
+
+public:
+    System(EntityManager* entityManager) : BaseSystem(entityManager) {}
 };

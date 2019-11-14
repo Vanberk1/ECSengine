@@ -33,6 +33,9 @@ void Game::Initialize(int width, int height) {
     }
 
     isRunning = true;
+
+    EntityManager manager = EntityManager();
+    manager.Init();
 }
 
 void Game::InputHandler() {

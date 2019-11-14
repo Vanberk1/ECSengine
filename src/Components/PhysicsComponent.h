@@ -5,10 +5,7 @@
 
 class PhysicsComponent : public Component {
 public:
-    glm::vec2 velocity;
+    static constexpr unsigned int ID = 1; // Manual ID. have to automate it 
 
-    PhysicsComponent(int velX, int velY) {
-        velocity.x = velX;
-        velocity.y = velY;
-    }
+    glm::vec2 velocity;
 };

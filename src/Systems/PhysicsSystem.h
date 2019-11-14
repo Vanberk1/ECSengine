@@ -8,6 +8,6 @@ class PhysicsSystem : public System<TransformComponent, PhysicsComponent> {
     using BaseType = System<TransformComponent, PhysicsComponent>;
 
 public:
-    PhysicsSystem(EntityManager* entityManager);
+    PhysicsSystem(EntityManager* entityManager) : BaseType(entityManager) {}
     void Update(float deltaTime) override;
 };
