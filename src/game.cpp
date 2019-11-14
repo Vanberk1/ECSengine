@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "Components/TransformComponent.h"
+#include "Components/PhysicsComponent.h"
 
 Game::Game() {
     isRunning = false;

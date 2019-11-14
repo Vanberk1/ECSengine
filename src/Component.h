@@ -3,11 +3,12 @@
 #include "Entity.h"
 
 class Component {
-private:
+protected:
     Entity* entity;
     size_t poolIndex;
 
 public:
-    Component(Entity* entity) : entity(entity) {}
-    virtual void Init(void* data);
+    virtual ~Component() {}
+    virtual void Init() {}
+    virtual void Debug() {}
 };
