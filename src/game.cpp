@@ -76,10 +76,15 @@ void Game::Initialize(int width, int height) {
 }
 
 void Game::LoadLevel() {
-    // Entity e1 = world.CreateEntity();
-    // world.AddComponent(e1, Physics{glm::vec2{50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    // world.AddComponent(e1, Transform{glm::vec2{100.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-    // world.AddComponent(e1, Sprite{});
+
+    SDL_Surface* surface = IMG_Load("./assets/images/cat.png");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    Entity e1 = world.CreateEntity();
+    world.AddComponent(e1, Physics{glm::vec2{-50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    world.AddComponent(e1, Sprite{texture});
 
     // Entity e2 = world.CreateEntity();
     // world.AddComponent(e2, Physics{glm::vec2{-30.0f, -10.0f}, glm::vec2{0.0f, 0.0f}});
@@ -88,18 +93,18 @@ void Game::LoadLevel() {
 
     int x, y , vx, vy;
 
-    srand(time(NULL));
+    // srand(time(NULL));
     
-    for(int i = 0; i < 1000; ++i) {
-        x = rand() % 640 + 1;
-        y = rand() % 480 + 1;
-        vx =rand() % 100 -50;
-        vy =rand() % 100 -50;
-        Entity entity = world.CreateEntity();
-        world.AddComponent(entity, Physics{glm::vec2{vx, vy}, glm::vec2{0.0f, 0.0f}});
-        world.AddComponent(entity, Transform{glm::vec2{x, y}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-        world.AddComponent(entity, Sprite{});
-    }
+    // for(int i = 0; i < 1000; ++i) {
+    //     x = rand() % 640 + 1;
+    //     y = rand() % 480 + 1;
+    //     vx =rand() % 100 -50;
+    //     vy =rand() % 100 -50;
+    //     Entity entity = world.CreateEntity();
+    //     world.AddComponent(entity, Physics{glm::vec2{vx, vy}, glm::vec2{0.0f, 0.0f}});
+    //     world.AddComponent(entity, Transform{glm::vec2{x, y}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    //     world.AddComponent(entity, Sprite{});
+    // }
 }
 
 void Game::InputHandler() {
