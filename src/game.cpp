@@ -1,6 +1,14 @@
 #include "Game.h"
-#include "Components/TransformComponent.h"
-#include "Components/PhysicsComponent.h"
+#include "World.h"
+#include "Components/Transform.h"
+#include "Components/Physics.h"
+#include "Components/Sprite.h"
+#include "Systems/PhysicsSystem.h"
+#include "Systems/RenderSystem.h"
+#include <memory>
+
+World world;
+SDL_Renderer* renderer;
 
 Game::Game() {
     isRunning = false;
@@ -36,8 +44,44 @@ void Game::Initialize(int width, int height) {
 
     isRunning = true;
 
-    EntityManager manager = EntityManager();
-    manager.Init();
+    world.Init();
+
+    world.RegisterComponent<Transform>();
+    world.RegisterComponent<Physics>();
+    world.RegisterComponent<Sprite>();
+
+    auto renderSystem = world.RegisterSystem<RenderSystem>();
+    renderSystem->SetRenderer(renderer);
+    {
+        Signature signature;
+        signature.set(world.GetComponentType<Transform>());
+        signature.set(world.GetComponentType<Sprite>());
+        world.SetSystemSignature<RenderSystem>(signature);
+    }
+    renderSystem->Init();
+
+    auto physicsSystem = world.RegisterSystem<PhysicsSystem>();
+    {
+        Signature signature;
+        signature.set(world.GetComponentType<Transform>());
+        signature.set(world.GetComponentType<Physics>());
+        world.SetSystemSignature<PhysicsSystem>(signature);
+    }
+    physicsSystem->Init();
+
+    LoadLevel();
+}
+
+void Game::LoadLevel() {
+    Entity e1 = world.CreateEntity();
+    world.AddComponent(e1, Physics{glm::vec2{50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e1, Transform{glm::vec2{100.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    world.AddComponent(e1, Sprite{});
+
+    Entity e2 = world.CreateEntity();
+    world.AddComponent(e2, Physics{glm::vec2{-30.0f, -10.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e2, Transform{glm::vec2{200.0f, 250.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    world.AddComponent(e2, Sprite{});
 }
 
 void Game::InputHandler() {
@@ -49,12 +93,20 @@ void Game::InputHandler() {
 }
 
 void Game::Update() {
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + (1000 / 60)));
+    float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
+    deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
+    ticksLastFrame = SDL_GetTicks();
 
+    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
+    SDL_RenderClear(renderer);
+
+    world.Update(deltaTime);
 }
 
 void Game::Render() {
-    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
-    SDL_RenderClear(renderer);
+    // SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
+    // SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 }
 

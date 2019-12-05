@@ -1,50 +1,43 @@
 #pragma once
 
 #include "ECSTypes.h"
-#include "Entity.h"
-#include "System.h"
-#include "Component.h"
-#include <vector>
-#include <map>
+#include <queue>
+#include <array>
 
 class EntityManager {
 private:
-    using Entities = std::map<EntityId, Entity>;
-    using Systems = std::vector<BaseSystem>;
-    using Components = std::map<ComponentTypeId, std::map<EntityId, Component>>;
-
-    int lastEntity = 0;
-    Entities entities;
-    Systems systems;
-    Components allComponents;
+    std::queue<Entity> availableEntities;
+    std::array<Signature, MAX_ENTITIES> signatures;
+    unsigned int livingEntityCount;
 
 public:
-    EntityManager();
-    //~EntityManager();
-    void Init();
-    void Update(float deltaTime);
-    Entity CreateEntity();
-    void DeleteEntity(EntityId entityID);
-
-    Entities GetEntities() const { return entities; }
-    Components GetComponents() const { return allComponents; }
-
-    template<typename CompType>
-    void AddComponent(EntityId entityId, CompType component) {
-        std::cout << "test 3" << std::endl;
-        std::cout << allComponents.size() << std::endl;
-        std::cout << CompType::ID << std::endl;
-        auto componentList = allComponents.find(CompType::ID);
-        if(componentList != allComponents.end()) {
-            auto componentsMap = allComponents[CompType::ID];
-            std::cout << "test 4" << std::endl;
-            componentsMap[entityId] = component;
-            std::cout << "test 5" << std::endl;
+    EntityManager() {
+        for(Entity entity = 0; entity < MAX_ENTITIES; ++entity) {
+            availableEntities.push(entity);
         }
-        else {
-            std::map<EntityId, Component> newComponentList;
-            newComponentList[entityId] = component;
-            allComponents[CompType::ID] = newComponentList;
-        }
-    }
+        signatures = {};
+        livingEntityCount = 0;
+    };
+
+    Entity CreateEntity() {
+        Entity id = availableEntities.front();
+        availableEntities.pop();
+        ++livingEntityCount;
+
+        return id;
+    };
+
+    void DestroyEntity(Entity entity) {
+        signatures[entity].reset();
+        availableEntities.push(entity);
+        --livingEntityCount;
+    };
+
+    void SetSignatire(Entity entity, Signature signature) {
+        signatures[entity] = signature;
+    };
+
+    Signature GetSignature(Entity entity) {
+		return signatures[entity];
+	}
 };

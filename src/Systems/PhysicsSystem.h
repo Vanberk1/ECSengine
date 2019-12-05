@@ -1,13 +1,28 @@
 #pragma once
 
 #include "../System.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/PhysicsComponent.h"
+#include "../World.h"
+#include "../Components/Transform.h"
+#include "../Components/Physics.h"
+#include <iostream>
 
-class PhysicsSystem : public System<TransformComponent, PhysicsComponent> {
-    using BaseType = System<TransformComponent, PhysicsComponent>;
-
+class PhysicsSystem : public System {
 public:
-    PhysicsSystem(EntityManager* entityManager) : BaseType(entityManager) {}
-    void Update(float deltaTime) override;
+	void Init() override {
+
+	}
+
+	void Update(float deltaTime) override {
+		extern World world;
+		for(auto const& entity : entities) {
+			auto& physics = world.GetComponent<Physics>(entity);
+			auto& transform = world.GetComponent<Transform>(entity);
+
+			physics.velocity += physics.acceleration * deltaTime;
+			physics.velocity.y += physics.gravity * deltaTime;
+			transform.position += physics.velocity * deltaTime;
+
+			//std::cout << "Entity: " << entity << " - Position [X: " << transform.position.x << ", Y: " << transform.position.y << "]" << std::endl;
+		}
+	}
 };

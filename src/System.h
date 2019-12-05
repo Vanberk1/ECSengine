@@ -1,14 +1,13 @@
 #pragma once
 
-#include "BaseSystem.h"
-#include <vector>
-#include <tuple>
+#include "ECSTypes.h"
+#include <set>
 
-template<class... Comps>
-class System : public BaseSystem {
-protected:
-    std::vector<std::tuple<Comps...>> components;
-
+class System {
 public:
-    System(EntityManager* entityManager) : BaseSystem(entityManager) {}
+    std::set<Entity> entities;   
+
+    virtual ~System() {};  
+    virtual void Init() {};
+    virtual void Update(float deltaTime) {};
 };
