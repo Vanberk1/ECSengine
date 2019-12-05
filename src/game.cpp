@@ -6,12 +6,15 @@
 #include "Systems/PhysicsSystem.h"
 #include "Systems/RenderSystem.h"
 #include <memory>
+#include <sstream>
+#include <time.h>  
 
 World world;
 SDL_Renderer* renderer;
 
 Game::Game() {
     isRunning = false;
+    countedFrames = 0;
 }
 
 void Game::Initialize(int width, int height) {
@@ -73,15 +76,30 @@ void Game::Initialize(int width, int height) {
 }
 
 void Game::LoadLevel() {
-    Entity e1 = world.CreateEntity();
-    world.AddComponent(e1, Physics{glm::vec2{50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e1, Transform{glm::vec2{100.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-    world.AddComponent(e1, Sprite{});
+    // Entity e1 = world.CreateEntity();
+    // world.AddComponent(e1, Physics{glm::vec2{50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e1, Transform{glm::vec2{100.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    // world.AddComponent(e1, Sprite{});
 
-    Entity e2 = world.CreateEntity();
-    world.AddComponent(e2, Physics{glm::vec2{-30.0f, -10.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e2, Transform{glm::vec2{200.0f, 250.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-    world.AddComponent(e2, Sprite{});
+    // Entity e2 = world.CreateEntity();
+    // world.AddComponent(e2, Physics{glm::vec2{-30.0f, -10.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e2, Transform{glm::vec2{200.0f, 250.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+    // world.AddComponent(e2, Sprite{});
+
+    int x, y , vx, vy;
+
+    srand(time(NULL));
+    
+    for(int i = 0; i < 1000; ++i) {
+        x = rand() % 640 + 1;
+        y = rand() % 480 + 1;
+        vx =rand() % 100 -50;
+        vy =rand() % 100 -50;
+        Entity entity = world.CreateEntity();
+        world.AddComponent(entity, Physics{glm::vec2{vx, vy}, glm::vec2{0.0f, 0.0f}});
+        world.AddComponent(entity, Transform{glm::vec2{x, y}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
+        world.AddComponent(entity, Sprite{});
+    }
 }
 
 void Game::InputHandler() {
@@ -92,8 +110,12 @@ void Game::InputHandler() {
     }
 }
 
+static const int NUM_FPS_SAMPLES = 64;
+float fpsSamples[NUM_FPS_SAMPLES];
+int currentSample = 0;
+
 void Game::Update() {
-    while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksLastFrame + (1000 / 60)));
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(),  + (1000 / 60)));
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
     deltaTime = (deltaTime > 0.05f) ? 0.05f : deltaTime;
     ticksLastFrame = SDL_GetTicks();
@@ -102,6 +124,17 @@ void Game::Update() {
     SDL_RenderClear(renderer);
 
     world.Update(deltaTime);
+
+    float avgFPS = countedFrames / ( SDL_GetTicks() / 1000.f );
+    if( avgFPS > 100000 ) {
+        avgFPS = 0;
+    }
+    std::stringstream ss;
+    ss << avgFPS;
+    std::string windowTitle = "Game Engine 1.0v - FPS: " + ss.str();
+    SDL_SetWindowTitle(window, windowTitle.c_str());
+
+    ++countedFrames;
 }
 
 void Game::Render() {

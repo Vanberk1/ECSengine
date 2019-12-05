@@ -12,6 +12,7 @@ private:
     SDL_Event event;
     bool isRunning;
     int ticksLastFrame;
+    int countedFrames;
 public:
     Game();
     ~Game();

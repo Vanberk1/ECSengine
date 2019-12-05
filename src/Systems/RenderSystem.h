@@ -30,7 +30,7 @@ public:
             body.h = 50;
 
             SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
-            SDL_RenderFillRect(renderer, &body);
+            SDL_RenderDrawRect(renderer, &body);
 		}
 	}
 
