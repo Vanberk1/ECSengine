@@ -4,9 +4,11 @@
 #include "Components/Physics.h"
 #include "Components/Sprite.h"
 #include "Components/ColliderAABB.h"
+#include "Components/Player.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/RenderSystem.h"
 #include "Systems/CollisionAABBSystem.h"
+#include "Systems/ControlSystem.h"
 #include <memory>
 #include <sstream>
 #include <time.h>  
@@ -54,6 +56,8 @@ void Game::Initialize(int width, int height) {
     world.RegisterComponent<Transform>();
     world.RegisterComponent<Physics>();
     world.RegisterComponent<Sprite>();
+    world.RegisterComponent<ColliderAABB>();
+    world.RegisterComponent<Player>();
 
     auto renderSystem = world.RegisterSystem<RenderSystem>();
     renderSystem->SetRenderer(renderer);
@@ -62,6 +66,7 @@ void Game::Initialize(int width, int height) {
         signature.set(world.GetComponentType<Transform>());
         signature.set(world.GetComponentType<Sprite>());
         world.SetSystemSignature<RenderSystem>(signature);
+        std::cout << signature << std::endl;
     }
     renderSystem->Init();
 
@@ -71,6 +76,7 @@ void Game::Initialize(int width, int height) {
         signature.set(world.GetComponentType<Transform>());
         signature.set(world.GetComponentType<Physics>());
         world.SetSystemSignature<PhysicsSystem>(signature);
+        std::cout << signature << std::endl;
     }
     physicsSystem->Init();
 
@@ -79,9 +85,21 @@ void Game::Initialize(int width, int height) {
         Signature signature;
         signature.set(world.GetComponentType<Transform>());
         signature.set(world.GetComponentType<ColliderAABB>());
+        signature.set(world.GetComponentType<Physics>());
         world.SetSystemSignature<CollisionAABBSystem>(signature);
+        std::cout << signature << std::endl;
     }
     collisionAABBSystem->Init();
+
+    auto controlSystem = world.RegisterSystem<ControlSystem>();
+    {
+        Signature signature;
+        signature.set(world.GetComponentType<Player>());
+        signature.set(world.GetComponentType<Physics>());
+        world.SetSystemSignature<ControlSystem>(signature);
+        std::cout << signature << std::endl;
+    }
+    controlSystem->Init();
 
     LoadLevel();
 }
@@ -96,11 +114,13 @@ void Game::LoadLevel() {
     world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
     world.AddComponent(e1, Physics{glm::vec2{-50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
     world.AddComponent(e1, Sprite{texture});
+    world.AddComponent(e1, Player{});
 
     Entity e2 = world.CreateEntity();
     world.AddComponent(e2, Transform{glm::vec2{100.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
     world.AddComponent(e2, Physics{glm::vec2{30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
     world.AddComponent(e2, Sprite{texture});
+    world.AddComponent(e2, ColliderAABB{"cat1"});
 
     Entity e3 = world.CreateEntity();
     world.AddComponent(e3, Transform{glm::vec2{20.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
@@ -111,6 +131,7 @@ void Game::LoadLevel() {
     world.AddComponent(e4, Transform{glm::vec2{400.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
     world.AddComponent(e4, Physics{glm::vec2{-30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
     world.AddComponent(e4, Sprite{texture});
+    world.AddComponent(e4, ColliderAABB{"cat2"});
 
     int x, y , vx, vy;
 

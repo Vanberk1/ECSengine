@@ -1,7 +1,8 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <string>
 
 struct ColliderAABB {
-    SDL_Rect collider;
+    std::string layer;
 };
