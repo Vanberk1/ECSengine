@@ -3,8 +3,10 @@
 #include "Components/Transform.h"
 #include "Components/Physics.h"
 #include "Components/Sprite.h"
+#include "Components/ColliderAABB.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/RenderSystem.h"
+#include "Systems/CollisionAABBSystem.h"
 #include <memory>
 #include <sstream>
 #include <time.h>  
@@ -72,6 +74,15 @@ void Game::Initialize(int width, int height) {
     }
     physicsSystem->Init();
 
+    auto collisionAABBSystem = world.RegisterSystem<CollisionAABBSystem>();
+    {
+        Signature signature;
+        signature.set(world.GetComponentType<Transform>());
+        signature.set(world.GetComponentType<ColliderAABB>());
+        world.SetSystemSignature<CollisionAABBSystem>(signature);
+    }
+    collisionAABBSystem->Init();
+
     LoadLevel();
 }
 
@@ -82,14 +93,24 @@ void Game::LoadLevel() {
     SDL_FreeSurface(surface);
 
     Entity e1 = world.CreateEntity();
+    world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
     world.AddComponent(e1, Physics{glm::vec2{-50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
     world.AddComponent(e1, Sprite{texture});
 
-    // Entity e2 = world.CreateEntity();
-    // world.AddComponent(e2, Physics{glm::vec2{-30.0f, -10.0f}, glm::vec2{0.0f, 0.0f}});
-    // world.AddComponent(e2, Transform{glm::vec2{200.0f, 250.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-    // world.AddComponent(e2, Sprite{});
+    Entity e2 = world.CreateEntity();
+    world.AddComponent(e2, Transform{glm::vec2{100.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
+    world.AddComponent(e2, Physics{glm::vec2{30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e2, Sprite{texture});
+
+    Entity e3 = world.CreateEntity();
+    world.AddComponent(e3, Transform{glm::vec2{20.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
+    world.AddComponent(e3, Physics{glm::vec2{70.0f, 20.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e3, Sprite{texture});
+
+    Entity e4 = world.CreateEntity();
+    world.AddComponent(e4, Transform{glm::vec2{400.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
+    world.AddComponent(e4, Physics{glm::vec2{-30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    world.AddComponent(e4, Sprite{texture});
 
     int x, y , vx, vy;
 
