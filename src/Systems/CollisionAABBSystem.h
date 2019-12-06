@@ -35,7 +35,10 @@ public:
                         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
                         SDL_RenderDrawRect(renderer, &collider1);
                         SDL_RenderDrawRect(renderer, &collider2);
-
+                        physics1.velocity.x = 0;
+                        physics1.velocity.y = 0;
+                        physics2.velocity.x = 0;
+                        physics2.velocity.y = 0;
                     }
                     else {
                         // std::cout << "No Collision" << std::endl;
