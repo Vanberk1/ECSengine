@@ -110,43 +110,43 @@ void Game::LoadLevel() {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 
-    Entity e1 = world.CreateEntity();
-    world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
-    world.AddComponent(e1, Physics{glm::vec2{-50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e1, Sprite{texture});
-    world.AddComponent(e1, Player{});
+    // Entity e1 = world.CreateEntity();
+    // world.AddComponent(e1, Transform{glm::vec2{300.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
+    // world.AddComponent(e1, Physics{glm::vec2{-50.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e1, Sprite{texture});
+    // world.AddComponent(e1, Player{});
 
-    Entity e2 = world.CreateEntity();
-    world.AddComponent(e2, Transform{glm::vec2{100.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
-    world.AddComponent(e2, Physics{glm::vec2{30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e2, Sprite{texture});
-    world.AddComponent(e2, ColliderAABB{"cat1"});
+    // Entity e2 = world.CreateEntity();
+    // world.AddComponent(e2, Transform{glm::vec2{100.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
+    // world.AddComponent(e2, Physics{glm::vec2{30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e2, Sprite{texture});
+    // world.AddComponent(e2, ColliderAABB{"cat1"});
 
-    Entity e3 = world.CreateEntity();
-    world.AddComponent(e3, Transform{glm::vec2{20.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
-    world.AddComponent(e3, Physics{glm::vec2{70.0f, 20.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e3, Sprite{texture});
+    // Entity e3 = world.CreateEntity();
+    // world.AddComponent(e3, Transform{glm::vec2{20.0f, 100.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{1, 1}, 32, 32});
+    // world.AddComponent(e3, Physics{glm::vec2{70.0f, 20.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e3, Sprite{texture});
 
-    Entity e4 = world.CreateEntity();
-    world.AddComponent(e4, Transform{glm::vec2{400.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
-    world.AddComponent(e4, Physics{glm::vec2{-30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
-    world.AddComponent(e4, Sprite{texture});
-    world.AddComponent(e4, ColliderAABB{"cat2"});
+    // Entity e4 = world.CreateEntity();
+    // world.AddComponent(e4, Transform{glm::vec2{400.0f, 300.0f}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
+    // world.AddComponent(e4, Physics{glm::vec2{-30.0f, 0.0f}, glm::vec2{0.0f, 0.0f}});
+    // world.AddComponent(e4, Sprite{texture});
+    // world.AddComponent(e4, ColliderAABB{"cat2"});
 
     int x, y , vx, vy;
 
-    // srand(time(NULL));
+    srand(time(NULL));
     
-    // for(int i = 0; i < 1000; ++i) {
-    //     x = rand() % 640 + 1;
-    //     y = rand() % 480 + 1;
-    //     vx =rand() % 100 -50;
-    //     vy =rand() % 100 -50;
-    //     Entity entity = world.CreateEntity();
-    //     world.AddComponent(entity, Physics{glm::vec2{vx, vy}, glm::vec2{0.0f, 0.0f}});
-    //     world.AddComponent(entity, Transform{glm::vec2{x, y}, glm::vec2{0.0f, 0.0f}, glm::vec2{0, 0}});
-    //     world.AddComponent(entity, Sprite{});
-    // }
+    for(int i = 0; i < 2000; ++i) {
+        x = rand() % 640 + 1;
+        y = rand() % 480 + 1;
+        vx =rand() % 100 -50;
+        vy =rand() % 100 -50;
+        Entity entity = world.CreateEntity();
+        world.AddComponent(entity, Physics{glm::vec2{vx, vy}, glm::vec2{0.0f, 0.0f}});
+        world.AddComponent(entity, Transform{glm::vec2{x, y}, glm::vec2{0.0f, 0.0f}, glm::vec2{2, 2}, 32, 32});
+        world.AddComponent(entity, Sprite{texture});
+    }
 }
 
 void Game::InputHandler() {
